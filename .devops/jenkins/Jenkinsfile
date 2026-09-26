@@ -9,7 +9,6 @@ pipeline {
         IMAGE_NAME      = 'enterprise-backend'
         IMAGE_TAG       = "${BUILD_NUMBER}"
 
-        KIND_CLUSTER    = 'enterprise-platform'
         KUBE_NAMESPACE  = 'enterprise-dev'
         DEPLOYMENT_NAME = 'backend-api'
         CONTAINER_NAME  = 'backend-api'
@@ -53,9 +52,9 @@ pipeline {
         stage('Load Image to kind') {
             steps {
                 sh '''
-                    kind load docker-image \
-                      ${IMAGE_NAME}:${IMAGE_TAG} \
-                      --name ${KIND_CLUSTER}
+                    docker save ${IMAGE_NAME}:${IMAGE_TAG} | \
+                      docker exec -i enterprise-platform-control-plane \
+                      ctr --namespace=k8s.io images import -
                 '''
             }
         }
@@ -109,22 +108,15 @@ pipeline {
 
         stage('Verify Deployment') {
             steps {
-                withCredentials([
-                    string(
-                        credentialsId: 'k8s-jenkins-token',
-                        variable: 'K8S_TOKEN'
-                    )
-                ]) {
-                    sh '''
-                        set +x
+                sh '''
+                    set +x
 
-                        KUBECONFIG="$WORKSPACE/jenkins-kubeconfig" \
-                          kubectl get deployment/${DEPLOYMENT_NAME}
+                    KUBECONFIG="$WORKSPACE/jenkins-kubeconfig" \
+                      kubectl get deployment/${DEPLOYMENT_NAME}
 
-                        KUBECONFIG="$WORKSPACE/jenkins-kubeconfig" \
-                          kubectl get pods -l app=backend-api
-                    '''
-                }
+                    KUBECONFIG="$WORKSPACE/jenkins-kubeconfig" \
+                      kubectl get pods -l app=backend-api -o wide
+                '''
             }
         }
     }
