@@ -19,5 +19,13 @@ services:
 
     restart: unless-stopped
 
+    networks:
+      - default
+      - kind
+
 volumes:
   jenkins_home:
+
+networks:
+  kind:
+    external: true
