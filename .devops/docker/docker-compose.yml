@@ -1,0 +1,11 @@
+services:
+  backend:
+    build:
+      context: ../../application/backend
+      dockerfile: ../../.devops/docker/Dockerfile
+
+    env_file:
+      - .env
+
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"

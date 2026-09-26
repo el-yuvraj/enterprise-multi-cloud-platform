@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: backend-api-ingress
+  namespace: enterprise-dev
+
+spec:
+  ingressClassName: nginx
+
+  rules:
+    - host: api.enterprise.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-api-service
+                port:
+                  number: 80

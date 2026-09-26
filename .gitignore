@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+venv/
+.venv/
+
+# Environment / Secrets
+.env
+.env.*
+!.env.example
+
+# IDE / Editor
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Terraform local/generated files
+**/.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+crash.log
+*.tfvars
+!*.tfvars.example
+
+# Ansible runtime files
+*.retry
+
+# Temporary files
+*.tmp
+*.swp
+*~
