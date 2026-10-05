@@ -1,0 +1,7 @@
+---
+- name: Configure application servers
+  hosts: app_servers
+  become: true
+
+  roles:
+    - common
